@@ -12,7 +12,7 @@ A modern, feature-rich comment system built with React + Vite, Redux Toolkit, an
 - ✅ **Delete Comments** - Users can delete their own comments
 - ✅ **Like/Dislike** - One action per user per comment validation
 - ✅ **Reply to Comments** - Nested comment threads
-- ✅ **Real-time Updates** - Socket.io integration for live updates
+- ✅ **Real-time Updates** - Pusher integration for live updates
 - ✅ **Sorting** - Sort by newest, most liked, most disliked
 - ✅ **Pagination** - Efficient data loading with page navigation
 - ✅ **Responsive Design** - Works seamlessly on all devices
@@ -22,7 +22,7 @@ A modern, feature-rich comment system built with React + Vite, Redux Toolkit, an
 - ⚡ **Vite** - Lightning-fast build tool and dev server
 - 🔄 **Redux Toolkit** - Efficient state management
 - 🎨 **SCSS** - Advanced styling with variables and mixins
-- 🔌 **Socket.io** - Real-time bidirectional communication
+- 🔌 **Pusher** - Real-time publishing and subscribing via Pusher Channels
 - 🛡️ **Protected Routes** - Route guards for authenticated pages
 - 📱 **Mobile-First** - Responsive design for all screen sizes
 
@@ -74,7 +74,7 @@ Before you begin, ensure you have the following installed:
 pnpm dev
 ```
 
-The application will open at `http://localhost:3000`
+The application will open at `http://localhost:5173` (Vite default) or the host/port configured in your environment.
 
 ### Production Build
 
@@ -199,14 +199,38 @@ POST   /api/comments/:id/dislike
 POST   /api/comments/:id/reply
 ```
 
+### API response example
+
+```json
+{
+  "success": true,
+  "data": [
+    /* array of comment objects */
+  ],
+  "page": 1,
+  "pages": 5,
+  "total": 42
+}
+```
+
+### Pusher events (payload examples)
+
+- `comment:created` → `{ "comment": { /* comment object */ }, "parentComment": null }
+`- `comment:updated` → `{ "comment": { /* comment object */ } }`
+- `comment:deleted` → `{ "commentId": "<id>" }`
+- `comment:liked` → `{ "commentId": "<id>", "likeCount": 10, "dislikeCount": 2 }`
+- `comment:disliked` → `{ "commentId": "<id>", "likeCount": 10, "dislikeCount": 3 }`
+- `comment:reply` → `{ "reply": { /* reply object */ }, "parentCommentId": "<id>" }`
+
 ## 🔐 Environment Variables
 
-| Variable          | Description          | Example                     |
-| ----------------- | -------------------- | --------------------------- |
-| `VITE_API_URL`    | Backend API base URL | `http://localhost:5000/api` |
-| `VITE_SOCKET_URL` | Socket.io server URL | `http://localhost:5000`     |
+| Variable              | Description          | Example                     |
+| --------------------- | -------------------- | --------------------------- |
+| `VITE_API_URL`        | Backend API base URL | `http://localhost:5000/api` |
+| `VITE_PUSHER_KEY`     | Pusher app key       | `your-pusher-key`           |
+| `VITE_PUSHER_CLUSTER` | Pusher cluster       | `mt1`                       |
 
-**Note:** All environment variables in Vite must be prefixed with `VITE_`
+**Note:** All environment variables in Vite must be prefixed with `VITE_`. If your backend uses Socket.io instead of Pusher, you can still define `VITE_SOCKET_URL` for socket server URL.
 
 ## 📱 Responsive Breakpoints
 
@@ -298,4 +322,5 @@ For issues and questions:
 ---
 
 **Happy Coding! 🚀**
+
 # comment_systemFront
