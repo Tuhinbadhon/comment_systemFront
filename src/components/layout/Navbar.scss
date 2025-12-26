@@ -80,3 +80,15 @@
     }
   }
 }
+
+@media (max-width: 480px) {
+  .navbar {
+    &-container {
+      padding: 0 1rem;
+    }
+
+    &-menu {
+      gap: 0.5rem;
+    }
+  }
+}

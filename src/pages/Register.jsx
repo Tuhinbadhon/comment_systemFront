@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../redux/slices/authSlice";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import "./Auth.scss";
 
 const Register = () => {
@@ -16,6 +17,8 @@ const Register = () => {
   const { name, email, phone, password, password2 } = formData;
   const [errors, setErrors] = useState({});
   const nameRef = useRef();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -140,7 +143,7 @@ const Register = () => {
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={password}
@@ -148,12 +151,21 @@ const Register = () => {
               placeholder="Enter your password"
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-pressed={showPassword}
+              title={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
           </div>
 
           <div className="form-group">
             <label htmlFor="password2">Confirm Password</label>
             <input
-              type="password"
+              type={showPassword2 ? "text" : "password"}
               id="password2"
               name="password2"
               value={password2}
@@ -161,6 +173,15 @@ const Register = () => {
               placeholder="Confirm your password"
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword2((s) => !s)}
+              aria-pressed={showPassword2}
+              title={showPassword2 ? "Hide password" : "Show password"}
+            >
+              {showPassword2 ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
           </div>
 
           <button

@@ -9,7 +9,9 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(user)
 
+  const data=user?.data;
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -22,14 +24,9 @@ const Navbar = () => {
           Comment System
         </Link>
         <div className="navbar-menu">
-          {user ? (
+          {data ? (
             <>
-              <Link to="/comments" className="navbar-link">
-                Comments
-              </Link>
-              <span className="navbar-user">
-                Welcome, {user.name || user.username}
-              </span>
+              <span className="navbar-user">Welcome, {data.user?.name}</span>
               <button onClick={handleLogout} className="btn btn-logout">
                 Logout
               </button>

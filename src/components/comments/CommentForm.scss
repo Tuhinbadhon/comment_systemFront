@@ -3,10 +3,10 @@
 
 .comment-form {
   @include card($spacing-xl, $radius-lg);
-  margin-bottom: $spacing-2xl;
+  margin-bottom: $spacing-xl;
 
   textarea {
-    min-height: 100px;
+    min-height: 200px;
     min-width: 100%;
     padding: $spacing-md;
     border: 1px solid $border-color;

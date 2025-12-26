@@ -2,9 +2,11 @@
 @use "../styles/mixins" as *;
 
 .comments-page {
-  max-width: 900px;
+
+  max-width: 800px;
+  width: 800px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  // padding: 1rem 1rem;
 }
 
 .comments-header {
@@ -21,7 +23,25 @@
 }
 
 @media (max-width: 768px) {
+  .comments-page {
+    width: 700px;
+    max-width: 700px;
+    padding: 1rem 0.5rem;
+  }
   .comments-header h1 {
     font-size: 1.5rem;
+  }
+}
+
+
+@media (max-width: 450px) {
+
+  .comments-page {
+    width: 390px;
+    padding: 1rem 0.5rem;
+  }
+
+  .comments-header h1 {
+    font-size: 1.25rem;
   }
 }
