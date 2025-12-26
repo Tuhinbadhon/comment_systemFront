@@ -1,29 +1,19 @@
-@use "../../styles/index.scss" as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .comment-item {
-  background: white;
-  border-radius: 12px;
-  padding: 1.75rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-
-  &:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-  }
+  @include card($spacing-lg, $radius-lg);
 }
 
 .comment-header {
-  display: flex;
-  justify-content: space-between;
+  @include flex-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: $spacing-md;
 
   .comment-author {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: $spacing-xs;
 
     .author-name {
       font-weight: 600;
@@ -31,19 +21,19 @@
     }
 
     .comment-date {
-      font-size: 0.85rem;
+      font-size: $font-size-sm;
       color: $light-text;
     }
   }
 
   .comment-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: $spacing-sm;
   }
 }
 
 .comment-body {
-  margin-bottom: 1rem;
+  margin-bottom: $spacing-md;
 
   .comment-text {
     color: $dark-text;
@@ -54,49 +44,35 @@
 
   .edit-form {
     textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid $border-color;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-family: inherit;
-      resize: vertical;
-      margin-bottom: 0.75rem;
-
-      &:focus {
-        outline: none;
-        border-color: $primary-color;
-      }
+      margin-bottom: $spacing-md;
     }
 
     .edit-actions {
       display: flex;
-      gap: 0.5rem;
+      gap: $spacing-sm;
     }
   }
 }
 
 .comment-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.75rem;
+  @include flex-between;
+  padding-top: $spacing-md;
   border-top: 1px solid $border-color;
 }
 
 .comment-reactions {
   display: flex;
-  gap: 1rem;
+  gap: $spacing-md;
 }
 
 .btn-reaction {
   background: none;
   border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.95rem;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
   cursor: pointer;
-  transition: $transition;
+  transition: $transition-base;
   color: $light-text;
 
   &:hover {
@@ -115,7 +91,7 @@
   color: $primary-color;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: $transition;
+  transition: $transition-base;
 
   &:hover {
     text-decoration: underline;

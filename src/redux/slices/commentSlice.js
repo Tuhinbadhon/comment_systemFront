@@ -40,7 +40,14 @@ export const getComments = createAsyncThunk(
       let url = `${API_URL}/comments?page=${page}&limit=${limit}&sortBy=${sortBy}`;
       if (parentId) url += `&parentId=${parentId}`;
       const response = await axios.get(url, getAuthConfig());
-      return response.data;
+
+      // Map backend response to frontend state structure
+      return {
+        comments: response.data.data || [],
+        totalPages: response.data.pages || 1,
+        currentPage: response.data.page || page,
+        totalComments: response.data.total || 0,
+      };
     } catch (error) {
       const message =
         (error.response &&
@@ -73,7 +80,7 @@ export const createComment = createAsyncThunk(
         commentData,
         getAuthConfig()
       );
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -96,7 +103,7 @@ export const updateComment = createAsyncThunk(
         { content },
         getAuthConfig()
       );
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -138,7 +145,7 @@ export const likeComment = createAsyncThunk(
         {},
         getAuthConfig()
       );
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -161,7 +168,7 @@ export const dislikeComment = createAsyncThunk(
         {},
         getAuthConfig()
       );
-      return response.data;
+      return response.data?.data || response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -184,7 +191,8 @@ export const replyToComment = createAsyncThunk(
         { content },
         getAuthConfig()
       );
-      return response.data;
+      // backend returns { success, message, data: reply }
+      return response.data?.data || response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -217,6 +225,27 @@ export const commentSlice = createSlice({
       );
       if (index !== -1) {
         state.comments[index] = action.payload;
+      }
+    },
+    updateCommentLikesRealtime: (state, action) => {
+      const { commentId, likeCount, dislikeCount } = action.payload;
+      const index = state.comments.findIndex((c) => c._id === commentId);
+      if (index !== -1) {
+        state.comments[index].likeCount = likeCount;
+        state.comments[index].dislikeCount = dislikeCount;
+      }
+    },
+    addReplyRealtime: (state, action) => {
+      const payload = action.payload || {};
+      const reply = payload.reply || payload;
+      const parentId = payload.parentCommentId || reply.parentComment;
+      if (!parentId) return;
+      const index = state.comments.findIndex((c) => c._id === parentId);
+      if (index !== -1) {
+        state.comments[index].replies = state.comments[index].replies || [];
+        state.comments[index].replies.push(reply);
+        state.comments[index].replyCount =
+          (state.comments[index].replyCount || 0) + 1;
       }
     },
     deleteCommentRealtime: (state, action) => {
@@ -285,11 +314,16 @@ export const commentSlice = createSlice({
         }
       })
       .addCase(replyToComment.fulfilled, (state, action) => {
-        const index = state.comments.findIndex(
-          (c) => c._id === action.payload._id
-        );
+        // action.payload is the created reply object
+        const reply = action.payload;
+        const parentId = reply.parentComment;
+        if (!parentId) return;
+        const index = state.comments.findIndex((c) => c._id === parentId);
         if (index !== -1) {
-          state.comments[index] = action.payload;
+          state.comments[index].replies = state.comments[index].replies || [];
+          state.comments[index].replies.push(reply);
+          state.comments[index].replyCount =
+            (state.comments[index].replyCount || 0) + 1;
         }
       });
   },
@@ -299,6 +333,8 @@ export const {
   reset,
   addCommentRealtime,
   updateCommentRealtime,
+  updateCommentLikesRealtime,
+  addReplyRealtime,
   deleteCommentRealtime,
 } = commentSlice.actions;
 export default commentSlice.reducer;

@@ -1,63 +1,28 @@
-@use "../../styles/index.scss" as *;
-@use "sass:color";
-
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .comment-form {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  margin-bottom: 2.5rem;
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  }
+  @include card($spacing-xl, $radius-lg);
+  margin-bottom: $spacing-2xl;
 
   textarea {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    border: 2px solid $border-color;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-family: inherit;
+    min-height: 100px;
+    min-width: 100%;
+    padding: $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $radius-sm;
+    font-size: $font-size-base;
+    color: $dark-text;
     resize: vertical;
-    transition: all 0.3s ease;
-    background-color: #fafbfc;
-    line-height: 1.6;
-
-    &:hover {
-      border-color: color.adjust($border-color, $lightness: -10%);
-      background-color: white;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      background-color: white;
-      box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-    }
-
-    &::placeholder {
-      color: #aaa;
-    }
   }
 
   &-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1.25rem;
+    @include flex-between;
+    margin-top: $spacing-lg;
 
     .character-count {
       color: $light-text;
-      font-size: 0.9rem;
+      font-size: $font-size-sm;
     }
-  }
-}
-
-@media (max-width: 768px) {
-  .comment-form {
-    padding: 1rem;
   }
 }

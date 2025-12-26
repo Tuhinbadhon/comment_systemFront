@@ -131,14 +131,20 @@ const CommentItem = ({ comment }) => {
             className={`btn-reaction ${hasLiked ? "active" : ""}`}
             title="Like"
           >
-            👍 {comment.likes?.length || 0}
+            👍{" "}
+            {comment.likeCount !== undefined
+              ? comment.likeCount
+              : comment.likes?.length || 0}
           </button>
           <button
             onClick={handleDislike}
             className={`btn-reaction ${hasDisliked ? "active" : ""}`}
             title="Dislike"
           >
-            👎 {comment.dislikes?.length || 0}
+            👎{" "}
+            {comment.dislikeCount !== undefined
+              ? comment.dislikeCount
+              : comment.dislikes?.length || 0}
           </button>
         </div>
         <button
