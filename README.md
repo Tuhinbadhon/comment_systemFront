@@ -2,6 +2,13 @@
 
 A modern, feature-rich comment system built with React + Vite, Redux Toolkit, and Socket.io for real-time updates.
 
+## �️ Default Admin Credentials
+
+For development and testing purposes, use the following account:
+
+- **Email:** `admin@gmail.com`
+- **Password:** `123456`
+
 ## 🚀 Features
 
 ### Core Features
@@ -306,7 +313,7 @@ For issues and questions:
 - Create an issue in the repository
 - Contact: your.email@example.com
 
-## 🔮 Future Enhancements
+## �🔮 Future Enhancements
 
 - [ ] Comment search functionality
 - [ ] User profiles with avatar images
