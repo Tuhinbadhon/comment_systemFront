@@ -1,0 +1,26 @@
+@use "../styles/index.scss" as *;
+
+.comments-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.comments-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid $border-color;
+
+  h1 {
+    color: $dark-text;
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .comments-header h1 {
+    font-size: 1.5rem;
+  }
+}

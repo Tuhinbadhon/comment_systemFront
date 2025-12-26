@@ -1,0 +1,19 @@
+@use "../../styles/index.scss" as *;
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.no-comments {
+  background: white;
+  border-radius: 12px;
+  padding: 3.5rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  color: $light-text;
+  font-size: 1.1rem;
+  border: 2px dashed $border-color;
+}

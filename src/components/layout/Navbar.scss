@@ -1,0 +1,81 @@
+@use "../../styles/index.scss" as *;
+
+.navbar {
+  background-color: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+
+  &-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $primary-color;
+    text-decoration: none;
+    transition: $transition;
+    letter-spacing: -0.5px;
+
+    &:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+  }
+
+  &-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &-link {
+    color: $dark-text;
+    text-decoration: none;
+    font-weight: 600;
+    transition: $transition;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+
+    &:hover {
+      color: $primary-color;
+      background-color: rgba(74, 144, 226, 0.08);
+    }
+  }
+
+  &-user {
+    color: $light-text;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    background-color: $light-bg;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    &-menu {
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    &-brand {
+      font-size: 1.2rem;
+    }
+
+    &-user {
+      display: none;
+    }
+  }
+}
