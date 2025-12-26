@@ -243,9 +243,15 @@ export const commentSlice = createSlice({
       const index = state.comments.findIndex((c) => c._id === parentId);
       if (index !== -1) {
         state.comments[index].replies = state.comments[index].replies || [];
-        state.comments[index].replies.push(reply);
-        state.comments[index].replyCount =
-          (state.comments[index].replyCount || 0) + 1;
+        // Deduplicate by _id
+        const exists = state.comments[index].replies.some(
+          (r) => r._id === reply._id
+        );
+        if (!exists) {
+          state.comments[index].replies.push(reply);
+          state.comments[index].replyCount =
+            (state.comments[index].replyCount || 0) + 1;
+        }
       }
     },
     deleteCommentRealtime: (state, action) => {
@@ -321,9 +327,15 @@ export const commentSlice = createSlice({
         const index = state.comments.findIndex((c) => c._id === parentId);
         if (index !== -1) {
           state.comments[index].replies = state.comments[index].replies || [];
-          state.comments[index].replies.push(reply);
-          state.comments[index].replyCount =
-            (state.comments[index].replyCount || 0) + 1;
+          // Deduplicate by _id
+          const exists = state.comments[index].replies.some(
+            (r) => r._id === reply._id
+          );
+          if (!exists) {
+            state.comments[index].replies.push(reply);
+            state.comments[index].replyCount =
+              (state.comments[index].replyCount || 0) + 1;
+          }
         }
       });
   },
