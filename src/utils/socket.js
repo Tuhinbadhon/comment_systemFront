@@ -1,64 +1,73 @@
-import io from "socket.io-client";
+import Pusher from "pusher-js";
 import {
   addCommentRealtime,
   updateCommentRealtime,
   deleteCommentRealtime,
 } from "../redux/slices/commentSlice";
 
-let socket = null;
+let pusher = null;
+let channel = null;
 
 export const initSocket = (dispatch) => {
-  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+  const PUSHER_KEY = import.meta.env.VITE_PUSHER_KEY;
+  const PUSHER_CLUSTER = import.meta.env.VITE_PUSHER_CLUSTER;
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user || !user.token) {
     return;
   }
 
-  socket = io(SOCKET_URL, {
+  pusher = new Pusher(PUSHER_KEY, {
+    cluster: PUSHER_CLUSTER,
+    authEndpoint: `${import.meta.env.VITE_API_URL}/pusher/auth`,
     auth: {
-      token: user.token,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     },
   });
 
-  socket.on("connect", () => {
-    console.log("Socket connected");
+  channel = pusher.subscribe("comments");
+
+  channel.bind("pusher:subscription_succeeded", () => {
+    console.log("Pusher connected");
   });
 
-  socket.on("comment:created", (comment) => {
+  channel.bind("comment:created", (comment) => {
     dispatch(addCommentRealtime(comment));
   });
 
-  socket.on("comment:updated", (comment) => {
+  channel.bind("comment:updated", (comment) => {
     dispatch(updateCommentRealtime(comment));
   });
 
-  socket.on("comment:deleted", (commentId) => {
-    dispatch(deleteCommentRealtime(commentId));
+  channel.bind("comment:deleted", (data) => {
+    dispatch(deleteCommentRealtime(data.commentId));
   });
 
-  socket.on("comment:liked", (comment) => {
+  channel.bind("comment:liked", (comment) => {
     dispatch(updateCommentRealtime(comment));
   });
 
-  socket.on("comment:disliked", (comment) => {
+  channel.bind("comment:disliked", (comment) => {
     dispatch(updateCommentRealtime(comment));
   });
 
-  socket.on("disconnect", () => {
-    console.log("Socket disconnected");
-  });
-
-  socket.on("error", (error) => {
-    console.error("Socket error:", error);
+  pusher.connection.bind("error", (error) => {
+    console.error("Pusher error:", error);
   });
 };
 
 export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
+  if (channel) {
+    channel.unbind_all();
+    pusher.unsubscribe("comments");
+    channel = null;
+  }
+  if (pusher) {
+    pusher.disconnect();
+    pusher = null;
   }
 };
 
-export const getSocket = () => socket;
+export const getSocket = () => pusher;

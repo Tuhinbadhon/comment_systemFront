@@ -103,7 +103,9 @@ const Register = () => {
               placeholder="Enter your name"
               required
             />
-            {errors.name && <small className="field-error">{errors.name}</small>}
+            {errors.name && (
+              <small className="field-error">{errors.name}</small>
+            )}
           </div>
 
           <div className="form-group">
@@ -117,7 +119,9 @@ const Register = () => {
               placeholder="Enter your email"
               required
             />
-            {errors.email && <small className="field-error">{errors.email}</small>}
+            {errors.email && (
+              <small className="field-error">{errors.email}</small>
+            )}
           </div>
 
           <div className="form-group">
