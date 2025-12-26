@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../redux/slices/authSlice";
+import { toastError, toastSuccess } from "../utils/toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import "./Auth.scss";
 
@@ -23,10 +24,11 @@ const Login = () => {
 
   useEffect(() => {
     if (isError) {
-      alert(message);
+      toastError(message || "Login failed");
     }
 
     if (isSuccess || user) {
+      toastSuccess("Logged in successfully");
       navigate("/comments");
     }
 
@@ -44,7 +46,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!identifier || !password) {
-      alert("Please fill in all fields");
+      toastError("Please fill in all fields");
       return;
     }
 

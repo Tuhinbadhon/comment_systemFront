@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../redux/slices/authSlice";
+import { toastError, toastSuccess } from "../utils/toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import "./Auth.scss";
 
@@ -36,9 +37,11 @@ const Register = () => {
       else err.form = message;
       setErrors(err);
       if (err.name) nameRef.current?.focus();
+      toastError(err.form || message || "Registration failed");
     }
 
     if (isSuccess || user) {
+      toastSuccess("Registered successfully");
       navigate("/comments");
     }
 

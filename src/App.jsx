@@ -13,6 +13,7 @@ import Comments from "./pages/Comments";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Navbar from "./components/layout/Navbar";
 import "./styles/App.scss";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <Route path="/" element={<Navigate to="/comments" replace />} />
             </Routes>
           </div>
+          <ToastContainer />
         </div>
       </Router>
     </Provider>

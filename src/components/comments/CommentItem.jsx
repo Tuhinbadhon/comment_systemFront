@@ -8,6 +8,7 @@ import {
   replyToComment,
 } from "../../redux/slices/commentSlice";
 import "./CommentItem.scss";
+import Swal from "sweetalert2";
 
 const CommentItem = ({ comment }) => {
   const dispatch = useDispatch();
@@ -67,9 +68,18 @@ const CommentItem = ({ comment }) => {
   };
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this comment?")) {
-      dispatch(deleteComment(comment._id));
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This comment will be deleted permanently.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteComment(comment._id));
+      }
+    });
   };
 
   const handleLike = () => {
@@ -101,7 +111,7 @@ const CommentItem = ({ comment }) => {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
-// console.log(comment)
+  // console.log(comment)
   // Return a readable author name from multiple possible shapes
   const getDisplayName = (item) => {
     const author = item?.author || item?.user || item;
@@ -225,7 +235,9 @@ const CommentItem = ({ comment }) => {
               {comment.replies.map((reply) => (
                 <div key={reply._id} className="reply-item">
                   <div className="reply-header">
-                    <span className="author-name">{getDisplayName(reply?.author)}</span>
+                    <span className="author-name">
+                      {getDisplayName(reply?.author)}
+                    </span>
                     <span className="comment-date">
                       {formatDate(reply.createdAt)}
                     </span>

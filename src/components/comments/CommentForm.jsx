@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createComment } from "../../redux/slices/commentSlice";
+import { toastError, toastSuccess } from "../../utils/toast";
 import "./CommentForm.scss";
 
 const MAX_CONTENT_LENGTH = 1000;
@@ -14,12 +15,19 @@ const CommentForm = () => {
     e.preventDefault();
 
     if (!content.trim()) {
-      alert("Please enter a comment");
+      toastError("Please enter a comment");
       return;
     }
 
-    dispatch(createComment({ content }));
-    setContent("");
+    dispatch(createComment({ content }))
+      .unwrap()
+      .then(() => {
+        toastSuccess("Comment posted");
+        setContent("");
+      })
+      .catch((err) => {
+        toastError(err || "Failed to post comment");
+      });
   };
 
   return (
