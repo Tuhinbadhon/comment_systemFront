@@ -4,10 +4,6 @@ A modern, feature-rich comment system built with React + Vite, Redux Toolkit, an
 
 ## �️ Default Admin Credentials
 
-For development and testing purposes, use the following account:
-
-- **Email:** `admin@gmail.com`
-- **Password:** `123456`
 
 ## 🚀 Features
 
