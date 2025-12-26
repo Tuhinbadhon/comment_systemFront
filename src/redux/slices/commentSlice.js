@@ -33,11 +33,12 @@ const getAuthConfig = () => {
 export const getComments = createAsyncThunk(
   "comments/getAll",
   async (
-    { page = 1, limit = 10, sortBy = "newest", parentId = null },
+    { page = 1, limit = 10, sortBy = "newest", filter = "", parentId = null },
     thunkAPI
   ) => {
     try {
       let url = `${API_URL}/comments?page=${page}&limit=${limit}&sortBy=${sortBy}`;
+      if (filter) url += `&filter=${filter}`;
       if (parentId) url += `&parentId=${parentId}`;
       const response = await axios.get(url, getAuthConfig());
 

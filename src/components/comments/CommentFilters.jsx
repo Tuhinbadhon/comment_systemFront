@@ -13,6 +13,12 @@ const CommentFilters = ({ sortBy, onSortChange }) => {
           Newest
         </button>
         <button
+          className={`btn-filter ${sortBy === "oldest" ? "active" : ""}`}
+          onClick={() => onSortChange("oldest")}
+        >
+          Oldest
+        </button>
+        <button
           className={`btn-filter ${sortBy === "mostLiked" ? "active" : ""}`}
           onClick={() => onSortChange("mostLiked")}
         >

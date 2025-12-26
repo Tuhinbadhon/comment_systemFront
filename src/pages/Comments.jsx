@@ -25,7 +25,14 @@ const Comments = () => {
   const limit = 10;
 
   useEffect(() => {
-    dispatch(getComments({ page, limit, sortBy }));
+    const filterParam =
+      sortBy === "mostLiked"
+        ? "liked"
+        : sortBy === "mostDisliked"
+        ? "disliked"
+        : "";
+
+    dispatch(getComments({ page, limit, sortBy, filter: filterParam }));
 
     // Initialize socket connection for real-time updates
     initSocket(dispatch);
@@ -44,6 +51,11 @@ const Comments = () => {
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
+    setPage(1);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
     setPage(1);
   };
 
