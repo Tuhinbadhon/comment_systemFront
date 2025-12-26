@@ -29,6 +29,18 @@
   .comment-actions {
     display: flex;
     gap: $spacing-sm;
+    button {
+      background: none;
+      border: none;
+      color: $light-text;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
   }
 }
 
@@ -45,6 +57,13 @@
   .edit-form {
     textarea {
       margin-bottom: $spacing-md;
+      width: 100%;
+      padding: $spacing-sm;
+      border: 2px solid $border-color;
+      border-radius: $radius-sm;
+      font-size: $font-size-base;
+      font-family: inherit;
+      resize: vertical;
     }
 
     .edit-actions {

@@ -11,7 +11,19 @@ import "./CommentItem.scss";
 
 const CommentItem = ({ comment }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const rawAuthUser = useSelector((state) => state.auth.user);
+
+  // Normalize auth user object coming from various backend shapes:
+  // possible shapes: { token, user: {...} }, { data: { user: {...}, token } }, { id, _id, name, ... }
+  const authUser =
+    rawAuthUser?.user ||
+    rawAuthUser?.data?.user ||
+    rawAuthUser?.data ||
+    rawAuthUser ||
+    null;
+
+  const authId = authUser?.id || authUser?._id || null;
+
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(
     comment.content || comment.text || ""
@@ -20,13 +32,30 @@ const CommentItem = ({ comment }) => {
   const [replyContent, setReplyContent] = useState("");
   const [showReplies, setShowReplies] = useState(false);
 
+  // Determine comment author id (backend may use author or user)
+  const commentAuthorId =
+    comment.author?._id ||
+    comment.user?._id ||
+    comment.user ||
+    comment.author ||
+    null;
+
   const isOwner =
-    user &&
-    comment.user &&
-    (comment.user._id === user.id || comment.user === user.id);
-  const hasLiked = user && comment.likes && comment.likes.includes(user.id);
+    authId &&
+    commentAuthorId &&
+    commentAuthorId.toString() === authId.toString();
+
+  // For likes/dislikes, backend may include boolean flags or arrays of ids
+  const hasLiked =
+    (typeof comment.isLikedByUser === "boolean" && comment.isLikedByUser) ||
+    (authId && Array.isArray(comment.likes) && comment.likes.includes(authId));
+
   const hasDisliked =
-    user && comment.dislikes && comment.dislikes.includes(user.id);
+    (typeof comment.isDislikedByUser === "boolean" &&
+      comment.isDislikedByUser) ||
+    (authId &&
+      Array.isArray(comment.dislikes) &&
+      comment.dislikes.includes(authId));
 
   const handleEdit = () => {
     if (!editContent.trim()) {
@@ -72,14 +101,18 @@ const CommentItem = ({ comment }) => {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
+// console.log(comment)
+  // Return a readable author name from multiple possible shapes
+  const getDisplayName = (item) => {
+    const author = item?.author || item?.user || item;
+    return author?.name || author?.username || author?.email || "Anonymous";
+  };
 
   return (
     <div className="comment-item">
       <div className="comment-header">
         <div className="comment-author">
-          <span className="author-name">
-            {comment.user?.name || comment.user?.username || "Anonymous"}
-          </span>
+          <span className="author-name">{getDisplayName(comment)}</span>
           <span className="comment-date">{formatDate(comment.createdAt)}</span>
         </div>
         {isOwner && (
@@ -192,9 +225,7 @@ const CommentItem = ({ comment }) => {
               {comment.replies.map((reply) => (
                 <div key={reply._id} className="reply-item">
                   <div className="reply-header">
-                    <span className="author-name">
-                      {reply.user?.name || reply.user?.username || "Anonymous"}
-                    </span>
+                    <span className="author-name">{getDisplayName(reply?.author)}</span>
                     <span className="comment-date">
                       {formatDate(reply.createdAt)}
                     </span>

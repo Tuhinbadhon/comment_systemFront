@@ -216,7 +216,11 @@ export const commentSlice = createSlice({
       state.message = "";
     },
     addCommentRealtime: (state, action) => {
-      state.comments.unshift(action.payload);
+      const comment = action.payload;
+      if (!comment || !comment._id) return;
+      const exists = state.comments.some((c) => c._id === comment._id);
+      if (exists) return;
+      state.comments.unshift(comment);
       state.totalComments += 1;
     },
     updateCommentRealtime: (state, action) => {
@@ -283,8 +287,14 @@ export const commentSlice = createSlice({
       .addCase(createComment.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.comments.unshift(action.payload);
-        state.totalComments += 1;
+        const comment = action.payload;
+        if (comment && comment._id) {
+          const exists = state.comments.some((c) => c._id === comment._id);
+          if (!exists) {
+            state.comments.unshift(comment);
+            state.totalComments += 1;
+          }
+        }
       })
       .addCase(createComment.rejected, (state, action) => {
         state.isLoading = false;
